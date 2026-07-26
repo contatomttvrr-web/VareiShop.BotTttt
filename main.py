@@ -23,27 +23,26 @@ if not CHAT_ID:
 
 # Função para extrair informações da mensagem
 def extract_info(text):
-    """Extrai nome, preço, cupom e link da mensagem"""
+    """Extrai nome, preço e link da mensagem"""
     # Tenta separar por |
     parts = text.split('|')
     
     # Remove espaços extras
     parts = [p.strip() for p in parts]
     
-    # Se tem 4 partes: nome, preço, cupom, link
-    if len(parts) == 4:
+    # Se tem 3 partes: nome, preço, link
+    if len(parts) >= 3:
         nome = parts[0]
         preco = parts[1]
-        cupom = parts[2]
-        link = parts[3]
+        link = parts[2]
         
         # Verifica se o link é válido
         if not link.startswith('http'):
             link = 'https://' + link
             
-        return nome, preco, cupom, link
+        return nome, preco, link
     
-    # Se não tem 4 partes, tenta extrair link sozinho
+    # Se não tem 3 partes, tenta extrair link sozinho
     else:
         # Procura link na mensagem
         url_pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+])+')
@@ -55,20 +54,18 @@ def extract_info(text):
             nome = text.replace(link, '').strip()
             if not nome:
                 nome = "Produto"
-            return nome, "Preço não informado", "Sem cupom", link
+            return nome, "Preço não informado", link
         else:
-            return None, None, None, None
+            return None, None, None
 
 # Função para criar mensagem personalizada
-def create_offer_message(nome, preco, cupom, link):
+def create_offer_message(nome, preco, link):
     """Cria a mensagem formatada"""
     message = f"""🛒 OFERTA VAREISHOP
 
 🎮 {nome}
 
 💰 {preco}
-
-🎫 Cupom: {cupom}
 
 👉 {link}
 
