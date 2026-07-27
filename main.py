@@ -1,4 +1,3 @@
-Redação
 import os
 import re
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
